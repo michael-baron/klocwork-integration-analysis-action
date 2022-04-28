@@ -19,8 +19,5 @@ runs:
   using: "composite"
   steps:
     - run: ${{ inputs.capture-tool }} ${{ inputs.build-command }}
-      shell: bash
     - run: kwbuildproject --url ${{ inputs.url }}/${{ inputs.project }} -o kwtables -I kwinject.out
-      shell: bash
     - run: kwadmin --url ${{ inputs.url }} load ${{ inputs.project }} kwtables
-      shell: bash
