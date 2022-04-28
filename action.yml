@@ -1,0 +1,26 @@
+name: 'Klocwork Integration Analysis'
+description: 'Runs a Klocwork project integration analysis'
+inputs:
+  capture-tool:
+    description: 'which Klocwork capture tool to use. Default is kwinject'
+    required: true
+    default: 'kwinject'
+  build-command:
+    description: 'build command for the project'
+    required: true
+  url:
+    description: 'Klocwork server URL, e.g. http[s]://<server>:<port>'
+    required: true
+  project:
+    description: 'Klocwork server project name'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ inputs.capture-tool }} ${{ inputs.build-command }}
+      shell: bash
+    - run: kwbuildproject --url ${{ inputs.url }}/${{ inputs.project }} -o kwtables -I kwinject.out
+      shell: bash
+    - run: kwadmin --url ${{ inputs.url }} load ${{ inputs.project }} kwtables
+      shell: bash
